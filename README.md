@@ -70,7 +70,7 @@ npm run docs:build
 All markdown files under `docs` directory will be automatically converted into webpages.
 Markdown files named `readme.md` or `index.md` will be considered as the landing page for that directory.
 
-So the following espnetez asr directory has the following three pages and no landing page.
+So for example, the following espnetez asr directory has the following three pages and no landing page.
 
 **docs/espnetez**
 ```
