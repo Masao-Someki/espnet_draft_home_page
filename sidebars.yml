@@ -1,0 +1,44 @@
+/espnet2/:
+- children:
+  - /espnet2/tts/tts_cli
+  - /espnet2/tts/tts_realtime_demo
+  - /espnet2/tts/espnet2_tts_realtime_demo
+  text: TTS
+- children:
+  - /espnet2/se/se_demo
+  - /espnet2/se/espnet_se_demonstration_for_waspaa_2021
+  text: SE
+- children:
+  - /espnet2/slu/espnet2_2pass_slu_demo
+  text: SLU
+- children:
+  - /espnet2/asr/asr_cli
+  - /espnet2/asr/espnet2_asr_realtime_demo
+  - /espnet2/asr/asr_library
+  - /espnet2/asr/espnet2_asr_transfer_learning_demo
+  - /espnet2/asr/espnet2_streaming_asr_demo
+  text: ASR
+- children:
+  - /espnet2/others/onnx_conversion_demo
+  - /espnet2/others/pretrained
+  text: OTHERS
+- children:
+  - /espnet2/st/st_demo
+  text: ST
+/espnetez/:
+- children:
+  - /espnetez/tts/tacotron2
+  text: TTS
+- children:
+  - /espnetez/asr/finetune_with_lora
+  - /espnetez/asr/train
+  - /espnetez/asr/finetune_owsm
+  text: ASR
+/tutorials/:
+- /tutorials/espnet2_tutorial_2021_CMU_11751_18781
+- /tutorials/SpokenLanguageUnderstanding_CMU_11492_692_Spring2023(Assignment6)
+- /tutorials/SpeechEnhancement_CMU_11492_692_Spring2023(Assignment7)
+- /tutorials/DataPreparation_CMU_11492_692_Spring2023(Assignment0)
+- /tutorials/espnet2_new_task_tutorial_CMU_11751_18781_Fall2022
+- /tutorials/espnet2_recipe_tutorial_CMU_11751_18781_Fall2022
+- /tutorials/TextToSpeech_CMU_11492_692_Spring2023(Assignment8)
