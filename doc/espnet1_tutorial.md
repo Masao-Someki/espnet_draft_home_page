@@ -1,11 +1,11 @@
-## Usage
+# Usage
 
 If you're a new user, we suggest checking out the
 [ESPnet2 tutorial](./espnet2_tutorial.md) as ESPnet1 is an older implementation.
 The majority of the development has now shifted to ESPnet2.
 Please be aware that certain information in this document may be outdated due to this shift.
 
-### Directory structure
+## Directory structure
 
 ```
 espnet/              # Python modules
@@ -25,22 +25,28 @@ egs/                 # The complete recipe for each corpora
     ...
 ```
 
-### Execution of example scripts
+## Execution of example scripts
 
 Move to an example directory under the `egs` directory.
 We prepare several major ASR benchmarks including WSJ, CHiME-4, and TED.
 The following directory is an example of performing ASR experiment with the CMU Census Database (AN4) recipe.
+
 ```sh
 $ cd egs/an4/asr1
 ```
+
 Once move to the directory, then, execute the following main script with a **chainer** backend:
+
 ```sh
 $ ./run.sh --backend chainer
 ```
+
 or execute the following main script with a **pytorch** backend:
+
 ```sh
 $ ./run.sh --backend pytorch
 ```
+
 With this main script, you can perform a full procedure of ASR experiments including
 - Data download
 - [Data preparation](http://kaldi-asr.org/doc/data_prep.html) (Kaldi style)
@@ -49,13 +55,16 @@ With this main script, you can perform a full procedure of ASR experiments inclu
 - Training based on [chainer](https://chainer.org/) or [pytorch](http://pytorch.org/).
 - Recognition and scoring
 
-### Logging
+## Logging
 
 The training progress (loss and accuracy for training and validation data) can be monitored with the following command
+
 ```sh
 $ tail -f exp/${expdir}/train.log
 ```
+
 When we use `./run.sh --verbose 0` (`--verbose 0` is default in most recipes), it gives you the following information
+
 ```
 epoch       iteration   main/loss   main/loss_ctc  main/loss_att  validation/main/loss  validation/main/loss_ctc  validation/main/loss_att  main/acc    validation/main/acc  elapsed_time  eps
 :
@@ -71,18 +80,21 @@ this epoch [#####.............................................] 10.84%
      91300 iter, 7 epoch / 20 epochs
    0.71428 iters/sec. Estimated time to finish: 2 days, 16:23:34.613215.
 ```
+
 Note that the an4 recipe uses `--verbose 1` as default since this recipe is often used for a debugging purpose.
 
 In addition [Tensorboard](https://www.tensorflow.org/guide/summaries_and_tensorboard) events are automatically logged in the `tensorboard/${expname}` folder. Therefore, when you install Tensorboard, you can easily compare several experiments by using
+
 ```sh
 $ tensorboard --logdir tensorboard
 ```
+
 and connecting to the given address (default : localhost:6006). This will provide the following information:
 ![2018-12-18_19h49_48](https://user-images.githubusercontent.com/14289171/50175839-2491e280-02fe-11e9-8dfc-de303804034d.png)
 Note that we would not include the installation of Tensorboard to simplify our installation process. Please install it manually (`pip install tensorflow; pip install tensorboard`) when you want to use Tensorboard.
 
 
-### Change options in run.sh
+## Change options in run.sh
 
 We rely on [utils/parse_options.sh](https://github.com/kaldi-asr/kaldi/blob/master/egs/wsj/s5/utils/parse_options.sh) to paser command line arguments in shell script and it's used in run.sh:
 
@@ -103,11 +115,12 @@ $ ./run.sh --ngpu 2
 echo 2
 ```
 
-### Use of GPU
+## Use of GPU
 
 
 - Training:
   If you want to use GPUs in your experiment, please set `--ngpu` option in `run.sh` appropriately, e.g.,
+
   ```bash
     # use single gpu
     $ ./run.sh --ngpu 1
@@ -122,19 +135,22 @@ echo 2
     # use cpu
     $ ./run.sh --ngpu 0
   ```
+
   - Default setup uses a single GPU (`--ngpu 1`).
 - ASR decoding:
   ESPnet also supports the GPU-based decoding for fast recognition.
   - Please manually remove the following lines in `run.sh`:
+
     ```bash
     #### use CPU for decoding
     ngpu=0
     ```
+
   - Set 1 or more values for `--batchsize` option in `asr_recog.py` to enable GPU decoding
   - And execute the script (e.g., `run.sh --stage 5 --ngpu 1`)
   - You'll achieve significant speed improvement by using the GPU decoding
 
-### ESPnet1 Transducer
+## ESPnet1 Transducer
 
 ***Important: If you encounter any issue related to Transducer loss, please open an issue in [our fork of warp-transducer](https://github.com/b-flo/warp-transducer).***
 
@@ -145,7 +161,7 @@ criterion: loss
 model-module: "espnet.nets.pytorch_backend.e2e_asr_transducer:E2E"
 ```
 
-#### Architecture
+### Architecture
 
 Several Transducer architectures are currently available in ESPnet:
 - RNN-Transducer (default, e.g.: `etype: blstm` with `dtype: lstm`)
@@ -157,97 +173,103 @@ The architecture specification is separated for the encoder and decoder part, an
 Here, the *custom* architecture is a unique feature of the Transducer model in ESPnet. It was made available to add some flexibility in the architecture definition and ease the reproduction of some SOTA Transducer models mixing  different layers types or parameters within the same model part (encoder or decoder). As such, the architecture definition is different compared to the RNN architecture :
 
 1) Each block (or layer) of the custom architecture should be specified individually through `enc-block-arch` or/and `dec-block-arch` parameters:
-
-        # e.g: Conv-Transformer encoder
-        etype: custom
-        enc-block-arch:
-                - type: conv1d
-                  idim: 80
-                  odim: 32
-                  kernel_size: [3, 7]
-                  stride: [1, 2]
-                - type: conv1d
-                  idim: 32
-                  odim: 32
-                  kernel_size: 3
-                  stride: 2
-                - type: conv1d
-                  idim: 32
-                  odim: 384
-                  kernel_size: 3
-                  stride: 1
-                - type: transformer
-                  d_hidden: 384
-                  d_ff: 1536
-                  heads: 4
+    
+  ```
+  # e.g: Conv-Transformer encoder
+  etype: custom
+  enc-block-arch:
+          - type: conv1d
+            idim: 80
+            odim: 32
+            kernel_size: [3, 7]
+            stride: [1, 2]
+          - type: conv1d
+            idim: 32
+            odim: 32
+            kernel_size: 3
+            stride: 2
+          - type: conv1d
+            idim: 32
+            odim: 384
+            kernel_size: 3
+            stride: 1
+          - type: transformer
+            d_hidden: 384
+            d_ff: 1536
+            heads: 4
+  ```
 
 2) Different block types are allowed for the custom encoder (`tdnn`, `conformer` or `transformer`) and the custom decoder (`causal-conv1d` or `transformer`). Each one has a set of mandatory and optional parameters :
+   
+  ```
+  # 1D convolution (TDNN) block
+  - type: conv1d
+    idim: [Input dimension. (int)]
+    odim: [Output dimension. (int)]
+    kernel_size: [Size of the context window. (int or tuple)]
+    stride (optional): [Stride of the sliding blocks. (int or tuple, default = 1)]
+    dilation (optional): [Parameter to control the stride of elements within the neighborhood. (int or tuple, default = 1)]
+    groups (optional): [Number of blocked connections from input channels to output channels. (int, default = 1)
+    bias (optional): [Whether to add a learnable bias to the output. (bool, default = True)]
+    use-relu (optional): [Whether to use a ReLU activation after convolution. (bool, default = True)]
+    use-batchnorm: [Whether to use batch normalization after convolution. (bool, default = False)]
+    dropout-rate (optional): [Dropout-rate for TDNN block. (float, default = 0.0)]
 
-        # 1D convolution (TDNN) block
-        - type: conv1d
-          idim: [Input dimension. (int)]
-          odim: [Output dimension. (int)]
-          kernel_size: [Size of the context window. (int or tuple)]
-          stride (optional): [Stride of the sliding blocks. (int or tuple, default = 1)]
-          dilation (optional): [Parameter to control the stride of elements within the neighborhood. (int or tuple, default = 1)]
-          groups (optional): [Number of blocked connections from input channels to output channels. (int, default = 1)
-          bias (optional): [Whether to add a learnable bias to the output. (bool, default = True)]
-          use-relu (optional): [Whether to use a ReLU activation after convolution. (bool, default = True)]
-          use-batchnorm: [Whether to use batch normalization after convolution. (bool, default = False)]
-          dropout-rate (optional): [Dropout-rate for TDNN block. (float, default = 0.0)]
+  # Transformer
+  - type: transformer
+    d_hidden: [Input/output dimension of Transformer block. (int)]
+    d_ff: [Hidden dimension of the Feed-forward module. (int)]
+    heads: [Number of heads in multi-head attention. (int)]
+    dropout-rate (optional): [Dropout-rate for Transformer block. (float, default = 0.0)]
+    pos-dropout-rate (optional): [Dropout-rate for positional encoding module. (float, default = 0.0)]
+    att-dropout-rate (optional): [Dropout-rate for attention module. (float, default = 0.0)]
 
-        # Transformer
-        - type: transformer
-          d_hidden: [Input/output dimension of Transformer block. (int)]
-          d_ff: [Hidden dimension of the Feed-forward module. (int)]
-          heads: [Number of heads in multi-head attention. (int)]
-          dropout-rate (optional): [Dropout-rate for Transformer block. (float, default = 0.0)]
-          pos-dropout-rate (optional): [Dropout-rate for positional encoding module. (float, default = 0.0)]
-          att-dropout-rate (optional): [Dropout-rate for attention module. (float, default = 0.0)]
+  # Conformer
+  - type: conformer
+    d_hidden: [Input/output dimension of Conformer block (int)]
+    d_ff: [Hidden dimension of the Feed-forward module. (int)]
+    heads: [Number of heads in multi-head attention. (int)]
+    macaron_style: [Whether to use macaron style. (bool)]
+    use_conv_mod: [Whether to use convolutional module. (bool)]
+    conv_mod_kernel (required if use_conv_mod = True): [Number of kernel in convolutional module. (int)]
+    dropout-rate (optional): [Dropout-rate for Transformer block. (float, default = 0.0)]
+    pos-dropout-rate (optional): [Dropout-rate for positional encoding module. (float, default = 0.0)]
+    att-dropout-rate (optional): [Dropout-rate for attention module. (float, default = 0.0)]
 
-        # Conformer
-        - type: conformer
-          d_hidden: [Input/output dimension of Conformer block (int)]
-          d_ff: [Hidden dimension of the Feed-forward module. (int)]
-          heads: [Number of heads in multi-head attention. (int)]
-          macaron_style: [Whether to use macaron style. (bool)]
-          use_conv_mod: [Whether to use convolutional module. (bool)]
-          conv_mod_kernel (required if use_conv_mod = True): [Number of kernel in convolutional module. (int)]
-          dropout-rate (optional): [Dropout-rate for Transformer block. (float, default = 0.0)]
-          pos-dropout-rate (optional): [Dropout-rate for positional encoding module. (float, default = 0.0)]
-          att-dropout-rate (optional): [Dropout-rate for attention module. (float, default = 0.0)]
-
-        # Causal Conv1d
-        - type: causal-conv1d
-          idim: [Input dimension. (int)]
-          odim: [Output dimension. (int)]
-          kernel_size: [Size of the context window. (int)]
-          stride (optional): [Stride of the sliding blocks. (int, default = 1)]
-          dilation (optional): [Parameter to control the stride of elements within the neighborhood. (int, default = 1)]
-          groups (optional): [Number of blocked connections from input channels to output channels. (int, default = 1)
-          bias (optional): [Whether to add a learnable bias to the output. (bool, default = True)]
-          use-relu (optional): [Whether to use a ReLU activation after convolution. (bool, default = True)]
-          use-batchnorm: [Whether to use batch normalization after convolution. (bool, default = False)]
-          dropout-rate (optional): [Dropout-rate for TDNN block. (float, default = 0.0)]
+  # Causal Conv1d
+  - type: causal-conv1d
+    idim: [Input dimension. (int)]
+    odim: [Output dimension. (int)]
+    kernel_size: [Size of the context window. (int)]
+    stride (optional): [Stride of the sliding blocks. (int, default = 1)]
+    dilation (optional): [Parameter to control the stride of elements within the neighborhood. (int, default = 1)]
+    groups (optional): [Number of blocked connections from input channels to output channels. (int, default = 1)
+    bias (optional): [Whether to add a learnable bias to the output. (bool, default = True)]
+    use-relu (optional): [Whether to use a ReLU activation after convolution. (bool, default = True)]
+    use-batchnorm: [Whether to use batch normalization after convolution. (bool, default = False)]
+    dropout-rate (optional): [Dropout-rate for TDNN block. (float, default = 0.0)]
+  ```
 
 3) The defined architecture can be repeated by specifying the total number of blocks/layers in the architecture through `enc-block-repeat` or/and `dec-block-repeat` parameters:
 
-        # e.g.: 2x (Causal-Conv1d + Transformer) decoder
-        dtype: transformer
-        dec-block-arch:
-                - type: causal-conv1d
-                  idim: 256
-                  odim: 256
-                  kernel_size: 5
-                - type: transformer
-                  d_hidden: 256
-                  d_ff: 256
-                  heads: 4
-                  dropout-rate: 0.1
-                  att-dropout-rate: 0.4
-        dec-block-repeat: 2
+  ```
+  # e.g.: 2x (Causal-Conv1d + Transformer) decoder
+  dtype: transformer
+  dec-block-arch:
+          - type: causal-conv1d
+            idim: 256
+            odim: 256
+            kernel_size: 5
+          - type: transformer
+            d_hidden: 256
+            d_ff: 256
+            heads: 4
+            dropout-rate: 0.1
+            att-dropout-rate: 0.4
+  dec-block-repeat: 2
+  ```
 
-#### Multi-task learning
+### Multi-task learning
 
 We also support multi-task learning with various auxiliary losses, such as: CTC, cross-entropy w/ label-smoothing (LM loss), auxiliary Transducer, and symmetric KL divergence.
 The four losses can be simultaneously trained with main Transducer loss to jointly optimize the total loss defined as:
@@ -258,32 +280,34 @@ where the losses are respectively, in order: The main Transducer loss, the CTC l
 
 Each loss can be defined in the training config alongside its specific options, such as follow:
 
-        # Transducer loss (L1)
-        transducer-loss-weight: [Weight of the main Transducer loss (float)]
+```
+# Transducer loss (L1)
+transducer-loss-weight: [Weight of the main Transducer loss (float)]
 
-        # CTC loss (L2)
-        use-ctc-loss: True
-        ctc-loss-weight (optional): [Weight of the CTC loss. (float, default = 0.5)]
-        ctc-loss-dropout-rate (optional): [Dropout rate for encoder output representation. (float, default = 0.0)]
+# CTC loss (L2)
+use-ctc-loss: True
+ctc-loss-weight (optional): [Weight of the CTC loss. (float, default = 0.5)]
+ctc-loss-dropout-rate (optional): [Dropout rate for encoder output representation. (float, default = 0.0)]
 
-        # Auxiliary Transducer loss (L3)
-        use-aux-transducer-loss: True
-        aux-transducer-loss-weight (optional): [Weight of the auxiliary Transducer loss. (float, default = 0.4)]
-        aux-transducer-loss-enc-output-layers (required if use-aux-transducer-loss = True): [List of intermediate encoder layer IDs to compute auxiliary Transducer loss(es). (list)]
-        aux-transducer-loss-mlp-dim (optional): [Hidden dimension for the MLP network. (int, default = 320)]
-        aux-transducer-loss-mlp-dropout-rate: [Dropout rate for the MLP network. (float, default = 0.0)]
+# Auxiliary Transducer loss (L3)
+use-aux-transducer-loss: True
+aux-transducer-loss-weight (optional): [Weight of the auxiliary Transducer loss. (float, default = 0.4)]
+aux-transducer-loss-enc-output-layers (required if use-aux-transducer-loss = True): [List of intermediate encoder layer IDs to compute auxiliary Transducer loss(es). (list)]
+aux-transducer-loss-mlp-dim (optional): [Hidden dimension for the MLP network. (int, default = 320)]
+aux-transducer-loss-mlp-dropout-rate: [Dropout rate for the MLP network. (float, default = 0.0)]
 
-        # Symmetric KL divergence loss (L4)
-        # Note: It can be only used in addition to the auxiliary Transducer loss.
-        use-symm-kl-div-loss: True
-        symm-kl-div-loss-weight (optional): [Weight of the symmetric KL divergence loss. (float, default = 0.2)]
+# Symmetric KL divergence loss (L4)
+# Note: It can be only used in addition to the auxiliary Transducer loss.
+use-symm-kl-div-loss: True
+symm-kl-div-loss-weight (optional): [Weight of the symmetric KL divergence loss. (float, default = 0.2)]
 
-        # LM loss (L5)
-        use-lm-loss: True
-        lm-loss-weight (optional): [Weight of the LM loss. (float, default = 0.2)]
-        lm-loss-smoothing-rate: [Smoothing rate for LM loss. If > 0, label smoothing is enabled. (float, default = 0.0)]
+# LM loss (L5)
+use-lm-loss: True
+lm-loss-weight (optional): [Weight of the LM loss. (float, default = 0.2)]
+lm-loss-smoothing-rate: [Smoothing rate for LM loss. If > 0, label smoothing is enabled. (float, default = 0.0)]
+```
 
-#### Inference
+### Inference
 
 Various decoding algorithms are also available for Transducer by setting `beam-size` and `search-type` parameters in decode config.
 
@@ -296,33 +320,35 @@ Various decoding algorithms are also available for Transducer by setting `beam-s
 
 The algorithms share two parameters to control beam size (`beam-size`) and final hypotheses normalization (`score-norm-transducer`). The specific parameters for each algorithm are:
 
-        # Default beam search
-        search-type: default
+```
+# Default beam search
+search-type: default
 
-        # Time-synchronous decoding
-        search-type: tsd
-        max-sym-exp: [Number of maximum symbol expansions at each time step (int)]
+# Time-synchronous decoding
+search-type: tsd
+max-sym-exp: [Number of maximum symbol expansions at each time step (int)]
 
-        # Alignement-length decoding
-        search-type: alsd
-        u-max: [Maximum output sequence length (int)]
+# Alignement-length decoding
+search-type: alsd
+u-max: [Maximum output sequence length (int)]
 
-        # N-step Constrained beam search
-        search-type: nsc
-        nstep: [Number of maximum expansion steps at each time step (int)]
-               # nstep = max-sym-exp + 1 (blank)
-        prefix-alpha: [Maximum prefix length in prefix search (int)]
+# N-step Constrained beam search
+search-type: nsc
+nstep: [Number of maximum expansion steps at each time step (int)]
+        # nstep = max-sym-exp + 1 (blank)
+prefix-alpha: [Maximum prefix length in prefix search (int)]
 
-        # modified Adaptive Expansion Search
-        search-type: maes
-        nstep: [Number of maximum expansion steps at each time step (int, > 1)]
-        prefix-alpha: [Maximum prefix length in prefix search (int)]
-        expansion-gamma: [Number of additional candidates in expanded hypotheses selection (int)]
-        expansion-beta: [Allowed logp difference for prune-by-value method (float, > 0)]
+# modified Adaptive Expansion Search
+search-type: maes
+nstep: [Number of maximum expansion steps at each time step (int, > 1)]
+prefix-alpha: [Maximum prefix length in prefix search (int)]
+expansion-gamma: [Number of additional candidates in expanded hypotheses selection (int)]
+expansion-beta: [Allowed logp difference for prune-by-value method (float, > 0)]
+```
 
 Except for the default algorithm, the described parameters are used to control the performance and decoding speed. The optimal values for each parameter are task-dependent; a high value will typically increase decoding time to focus on performance while a low value will improve decoding time at the expense of performance.
 
-#### Additional notes
+### Additional notes
 
 - Similarly to training with CTC, Transducer does not output the validation accuracy. Thus, the optimum model is selected with its loss value (i.e., --recog_model model.loss.best).
 - There are several differences between MTL and Transducer training/decoding options. The users should refer to `espnet/espnet/nets/pytorch_backend/e2e_asr_transducer.py` for an overview and `espnet/espnet/nets/pytorch_backend/transducer/arguments` for all possible arguments.
@@ -330,7 +356,7 @@ Except for the default algorithm, the described parameters are used to control t
 - RNN-decoder pre-initialization using an LM is supported. Note that regular decoder keys are expected. The LM state dict keys (`predictor.*`) will be renamed according to AM state dict keys (`dec.*`).
 - Transformer-decoder pre-initialization using a Transformer LM is not supported yet.
 
-### Changing the training configuration
+## Changing the training configuration
 
 The default configurations for training and decoding are written in `conf/train.yaml` and `conf/decode.yaml` respectively.  It can be overwritten by specific arguments: e.g.
 
@@ -361,47 +387,52 @@ We also provide a utility to generate a yaml file from the input yaml file:
 ./run.sh --train-config $(change_yaml.py conf/train.yaml -o conf/train2.yaml -a batch-size=24)
 ```
 
-### How to set minibatch
+## How to set minibatch
 
 From espnet v0.4.0, we have three options in `--batch-count` to specify minibatch size (see `espnet.utils.batchfy` for implementation);
 1. `--batch-count seq --batch-seqs 32 --batch-seq-maxlen-in 800 --batch-seq-maxlen-out 150`.
 
     This option is compatible to the old setting before v0.4.0. This counts the minibatch size as the number of sequences and reduces the size when the maximum length of the input or output sequences is greater than 800 or 150, respectively.
-1. `--batch-count bin --batch-bins 100000`.
+
+2. `--batch-count bin --batch-bins 100000`.
 
     This creates the minibatch that has the maximum number of bins under 100 in the padded input/output minibatch tensor  (i.e., `max(ilen) * idim + max(olen) * odim`).
 Basically, this option makes training iteration faster than `--batch-count seq`. If you already has the best `--batch-seqs x` config, try `--batch-bins $((x * (mean(ilen) * idim + mean(olen) * odim)))`.
-1. `--batch-count frame --batch-frames-in 800 --batch-frames-out 100 --batch-frames-inout 900`.
+
+3. `--batch-count frame --batch-frames-in 800 --batch-frames-out 100 --batch-frames-inout 900`.
 
     This creates the minibatch that has the maximum number of input, output and input+output frames under 800, 100 and 900, respectively. You can set one of `--batch-frames-xxx` partially. Like `--batch-bins`, this option makes training iteration faster than `--batch-count seq`. If you already has the best `--batch-seqs x` config, try `--batch-frames-in $((x * (mean(ilen) * idim)) --batch-frames-out $((x * mean(olen) * odim))`.
 
-### How to use finetuning
+## How to use finetuning
 
 ESPnet currently supports two finetuning operations: transfer learning and freezing.
 We expect the user to define the following options in its main training config (e.g.: conf/train*.yaml). If needed, they can be directly passed to `(asr|tts|vc)_train.py` by adding the prefix `--` to the options.
 
-#### Transfer learning
+### Transfer learning
 
 - Transfer learning option is split between encoder initialization (`enc-init`) and decoder initialization (`dec-init`). However, the same model can be specified for both options.
 - Each option takes a snapshot path (e.g.: `[espnet_model_path]/results/snapshot.ep.1`) or model path (e.g.: `[espnet_model_path]/results/model.loss.best`) as argument.
 - Additionally, a list of encoder and decoder modules (separated by a comma) can also be specified to control the modules to transfer with the options `enc-init-mods` and `dec-init-mods`.
 - For each specified module, we only expect a partial match with the start of the target model module name. Thus, multiple modules can be specified with the same key if they share a common prefix.
 
+  ```
     > Mandatory: `enc-init: /home/usr/espnet/egs/vivos/asr1/exp/train_nodev_pytorch_train/results/model.loss.best` -> specify a pre-trained model on VIVOS for transfer learning.
          > Example 1: `enc-init-mods: 'enc.'` -> transfer all encoder parameters.
          > Example 2: `enc-init-mods: 'enc.embed.,enc.0.'` -> transfer encoder embedding layer and first layer parameters.
+  ```
 
-
-#### Freezing
+### Freezing
 
 - Freezing option can be enabled with `freeze-mods`, (`freeze_param` in espnet2).
 - The option take a list of model modules (separated by a comma) as argument. As previously, we do not expect a complete match for the specified modules.
 
+  ```
     > Example 1: `freeze-mods: 'enc.embed.'` -> freeze encoder embedding layer parameters.
     > Example 2: `freeze-mods: 'dec.embed,dec.0.'` -> freeze decoder embedding layer and first layer parameters.
     > Example 3 (espnet2): `freeze_param: 'encoder.embed'` -> freeze encoder embedding layer parameters.
+  ```
 
-### Important notes
+## Important notes
 
 - Given a pre-trained source model, the modules specified for transfer learning are expected to have the same parameters (i.e.: layers and units) as the target model modules.
 - We also support initialization with a pre-trained RNN LM for the RNN-Transducer decoder.
@@ -409,15 +440,15 @@ We expect the user to define the following options in its main training config (
   - RNN model use `enc.` for encoder part and `dec.` for decoder part.
   - Transformer/Conformer/Custom model use `encoder.` for encoder part and `decoder.` for decoder part.
 
-### Chainer and Pytorch backends
+## Chainer and Pytorch backends
 
-|                    | Chainer                         | Pytorch                            |
-| -----------        | :----:                          | :----:                             |
-| Performance        | ◎                               | ◎                                  |
-| Speed              | ○                               | ◎                                  |
-| Multi-GPU          | supported                       | supported                          |
-| VGG-like encoder   | supported                       | supported                          |
-| Transformer        | supported                       | supported                          |
-| RNNLM integration  | supported                       | supported                          |
+|                    |             Chainer             |              Pytorch               |
+| ------------------ | :-----------------------------: | :--------------------------------: |
+| Performance        |                ◎                |                 ◎                  |
+| Speed              |                ○                |                 ◎                  |
+| Multi-GPU          |            supported            |             supported              |
+| VGG-like encoder   |            supported            |             supported              |
+| Transformer        |            supported            |             supported              |
+| RNNLM integration  |            supported            |             supported              |
 | #Attention types   | 3 (no attention, dot, location) | 12 including variants of multihead |
-| TTS recipe support | no support                      | supported                          |
+| TTS recipe support |           no support            |             supported              |

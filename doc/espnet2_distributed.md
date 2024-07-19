@@ -2,13 +2,13 @@
 
 ESPnet2 provides some kinds of data-parallel distributed training.
 
-||DP/DDP|Single/Multi host|Option|
-|---|---|---|---|
-|Multi-processing with single host|DistributedDataParallel|Single|--ngpu `N-GPU` --multiprocessing_distributed true|
-|Multi-threading with single host|DataParallel|Single|--ngpu `N-GPU` --multiprocessing_distributed false|
-|Multi-processing with `N-HOST` jobs with `N-GPU` for each host (=`N-HOST`x`N-GPU` nodes)|DistributedDataParallel|Multi|--dist_world_size `N-HOST` --ngpu `N-GPU` --multiprocessing_distributed true|
-|Multi-threading with `N-HOST` jobs with `N-GPU` for each host (=`N-HOST`x`N-GPU` nodes)|DistributedDataParallel|Multi|--dist_world_size `N-HOST` --ngpu `N-GPU` --multiprocessing_distributed false|
-|`N-NODE` jobs with `1-GPU` for each node|DistributedDataParallel|Single/Multi|--dist_world_size `N-NODE` --ngpu 1|
+|                                                                                          | DP/DDP                  | Single/Multi host | Option                                                                        |
+| ---------------------------------------------------------------------------------------- | ----------------------- | ----------------- | ----------------------------------------------------------------------------- |
+| Multi-processing with single host                                                        | DistributedDataParallel | Single            | --ngpu `N-GPU` --multiprocessing_distributed true                             |
+| Multi-threading with single host                                                         | DataParallel            | Single            | --ngpu `N-GPU` --multiprocessing_distributed false                            |
+| Multi-processing with `N-HOST` jobs with `N-GPU` for each host (=`N-HOST`x`N-GPU` nodes) | DistributedDataParallel | Multi             | --dist_world_size `N-HOST` --ngpu `N-GPU` --multiprocessing_distributed true  |
+| Multi-threading with `N-HOST` jobs with `N-GPU` for each host (=`N-HOST`x`N-GPU` nodes)  | DistributedDataParallel | Multi             | --dist_world_size `N-HOST` --ngpu `N-GPU` --multiprocessing_distributed false |
+| `N-NODE` jobs with `1-GPU` for each node                                                 | DistributedDataParallel | Single/Multi      | --dist_world_size `N-NODE` --ngpu 1                                           |
 
 
 
@@ -18,6 +18,7 @@ Note: The behavior of batch size in ESPnet2 during multi-GPU training is differe
 
 
 ### Single node with 4GPUs with distributed mode
+
 ```bash
 % python -m espnet2.bin.asr_train --ngpu 4 --multiprocessing_distributed true
 ```
@@ -71,6 +72,7 @@ See: https://pytorch.org/docs/stable/distributed.html#tcp-initialization
 There are two ways to initialize and **these methods can be interchanged** in all examples.
 
 - TCP initialization
+
    ```bash
    # These three are equivalent:
    --dist_master_addr <rank0-host> --dist_master_port <any-free-port>
@@ -79,6 +81,7 @@ There are two ways to initialize and **these methods can be interchanged** in al
    ```
 
 - Shared file system initialization
+
    ```bash
    --dist_init_method "file:///nfs/some/where/filename"
    ```
@@ -91,6 +94,7 @@ There are two ways to initialize and **these methods can be interchanged** in al
 
 
 ### 2Hosts which have 2GPUs and 1GPU respectively
+
 ```bash
 (host1) % python -m espnet2.bin.asr_train \
     --ngpu 1 \
@@ -146,6 +150,7 @@ I recommend shared-file initialization in this case because the host will be det
 ```
 
 ## `espnet2.bin.launch`
+
 Coming soon...
 
 ## Troubleshooting for NCCL with Ethernet case
@@ -165,6 +170,7 @@ Coming soon...
 
 
 ## The rules of `NCCL_SOCKET_IFNAME`
+
 See: https://docs.nvidia.com/deeplearning/sdk/nccl-developer-guide/docs/env.html
 
 - The default value is  `NCCL_SOCKET_IFNAME=^lo,docker`.
@@ -178,19 +184,19 @@ See: https://docs.nvidia.com/deeplearning/sdk/nccl-developer-guide/docs/env.html
 
 My recommended setting for a non-virtual environment
 -  `NCCL_SOCKET_IFNAME=en,eth,em,bond`
- -  Or, `NCCL_SOCKET_IFNAME=^lo,docker,virbr,vmnet,vboxnet,wl,ww,ppp`
+  Or, `NCCL_SOCKET_IFNAME=^lo,docker,virbr,vmnet,vboxnet,wl,ww,ppp`
 
-|The prefix of network interface name|Note|
-|---|---|
-|lo|Loopback.|
-|eth|Ethernet. Classically used.|
-|em|Ethernet. Dell machine?|
-|en|Ethernet (Used in recent Linux. e.g CentOS7)|
-|wlan|Wireless|
-|wl|Wireless LAN (Used in recent Linux)|
-|ww|Wireless wan (Used in recent Linux)|
-|ib|IP over IB|
-|bond|Bonding of multiple ethernets |
-|virbr|Virtual bridge|
-|docker,vmnet,vboxnet|Virtual machine|
-|ppp|Point to point|
+| The prefix of network interface name | Note                                         |
+| ------------------------------------ | -------------------------------------------- |
+| lo                                   | Loopback.                                    |
+| eth                                  | Ethernet. Classically used.                  |
+| em                                   | Ethernet. Dell machine?                      |
+| en                                   | Ethernet (Used in recent Linux. e.g CentOS7) |
+| wlan                                 | Wireless                                     |
+| wl                                   | Wireless LAN (Used in recent Linux)          |
+| ww                                   | Wireless wan (Used in recent Linux)          |
+| ib                                   | IP over IB                                   |
+| bond                                 | Bonding of multiple ethernets                |
+| virbr                                | Virtual bridge                               |
+| docker,vmnet,vboxnet                 | Virtual machine                              |
+| ppp                                  | Point to point                               |

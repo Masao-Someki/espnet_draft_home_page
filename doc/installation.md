@@ -1,5 +1,6 @@
-## Installation
-### Requirements
+# Installation
+
+## Requirements
 
 - Python 3.7+
 - gcc 4.9+ for PyTorch1.10.2+
@@ -8,18 +9,23 @@
 the following packages are installed using conda, so you can skip them.)
 
 - cmake3 for some extensions
+  
     ```sh
     # For Ubuntu
     $ sudo apt-get install cmake
     ```
+
 - sox
+  
     ```sh
     # For Ubuntu
     $ sudo apt-get install sox
     # For CentOS
     $ sudo yum install sox
     ```
+
 - flac (This is not required when installing, but used in some recipes)
+  
     ```sh
     # For Ubuntu
     $ sudo apt-get install flac
@@ -27,7 +33,7 @@ the following packages are installed using conda, so you can skip them.)
     $ sudo yum install flac
     ```
 
-### Supported Linux distributions and other requirements
+## Supported Linux distributions and other requirements
 
 We support the following Linux distributions with CI. If you want to build your own Linux by yourself,
 please also check our [CI configurations](https://github.com/espnet/espnet/tree/master/.github/workflows)
@@ -41,7 +47,7 @@ to prepare the appropriate environments.
 - MacOS12 (installation only)
 
 
-### Step 1) [Optional] Install Kaldi
+## Step 1) [Optional] Install Kaldi
 - If you use ESPnet1 (under egs/), you must compile Kaldi.
 - If you use ESPnet2 (under egs2/), You can skip the installation of Kaldi.
 
@@ -65,34 +71,38 @@ Kaldi's requirements:
     $ cd <any-place>
     $ git clone https://github.com/kaldi-asr/kaldi
     ```
-1. Install tools
+
+2. Install tools
 
     ```sh
     $ cd <kaldi-root>/tools
     $ make -j <NUM-CPU>
     ```
+
     1. Select BLAS library from ATLAS, OpenBLAS, or MKL
 
     - OpenBLAS
 
-    ```sh
-    $ cd <kaldi-root>/tools
-    $ ./extras/install_openblas.sh
-    ```
+        ```sh
+        $ cd <kaldi-root>/tools
+        $ ./extras/install_openblas.sh
+        ```
+
     - MKL (You need sudo privilege)
 
-    ```sh
-    $ cd <kaldi-root>/tools
-    $ sudo ./extras/install_mkl.sh
-    ```
+        ```sh
+        $ cd <kaldi-root>/tools
+        $ sudo ./extras/install_mkl.sh
+        ```
+
     - ATLAS (You need sudo privilege)
 
-    ```sh
-    # Ubuntu
-    $ sudo apt-get install libatlas-base-dev
-    ```
+        ```sh
+        # Ubuntu
+        $ sudo apt-get install libatlas-base-dev
+        ```
 
-1. Compile Kaldi & install
+3. Compile Kaldi & install
 
     ```sh
     $ cd <kaldi-root>/src
@@ -104,28 +114,30 @@ Kaldi's requirements:
     # ./configure --cudatk-dir=/usr/local/cuda-10.0
     $ make -j clean depend; make -j <NUM-CPU>
     ```
+
 We also have [prebuilt Kaldi binaries](https://github.com/espnet/espnet/blob/master/ci/install_kaldi.sh).
 
 </div></details>
 
-### Step 2) Installation ESPnet
+## Step 2) Installation ESPnet
 
 1. Git clone ESPnet
+   
     ```sh
     $ cd <any-place>
     $ git clone https://github.com/espnet/espnet
     ```
-1. [Optional] Put compiled Kaldi under espnet/tools
+
+2. [Optional] Put compiled Kaldi under espnet/tools
 
     If you have compiled Kaldi at Step 1, put it under `tools`.
-
 
     ```sh
     $ cd <espnet-root>/tools
     $ ln -s <kaldi-root> .
     ```
 
-1. Setup Python environment
+3. Setup Python environment
 
     You must create `<espnet-root>/tools/activate_python.sh` to specify the Python interpreter used in espnet recipes.
     (To understand how ESPnet specifies Python, see [path.sh](https://github.com/espnet/espnet/blob/master/egs2/TEMPLATE/asr1/path.sh) for example.)
@@ -165,6 +177,7 @@ We also have [prebuilt Kaldi binaries](https://github.com/espnet/espnet/blob/mas
         $ cd <espnet-root>/tools
         $ ./setup_python.sh $(command -v python3)
         ```
+
     - Option D) Without setting the Python environment
 
         `Option C` and `Option D` are almost the same. This option might be suitable for Google colab.
@@ -173,7 +186,8 @@ We also have [prebuilt Kaldi binaries](https://github.com/espnet/espnet/blob/mas
         $ cd <espnet-root>/tools
         $ rm -f activate_python.sh && touch activate_python.sh
         ```
-1. Install ESPnet
+
+4. Install ESPnet
 
     ```sh
     $ cd <espnet-root>/tools
@@ -203,7 +217,7 @@ We also have [prebuilt Kaldi binaries](https://github.com/espnet/espnet/blob/mas
     $ make CPU_ONLY=0
     ```
 
-### Step 3) [Optional] Custom tool installation
+## Step 3) [Optional] Custom tool installation
 Some packages used only for specific tasks, e.g., Transducer ASR, Japanese TTS, etc. are not installed by default,
 so if you meet some installation error when running these recipes, you need to install them optionally.
 
@@ -211,30 +225,38 @@ so if you meet some installation error when running these recipes, you need to i
 e.g.
 
 - To install Warp Transducer
+  
     ```sh
     cd <espnet-root>/tools
     cuda_root=<cuda-root>  # e.g. <cuda-root> = /usr/local/cuda
     bash -c ". activate_python.sh; . ./setup_cuda_env.sh $cuda_root; ./installers/install_warp-transducer.sh"
     ```
+
 - To install PyOpenJTalk
+  
     ```sh
     cd <espnet-root>/tools
     bash -c ". activate_python.sh; ./installers/install_pyopenjtalk.sh"
     ```
+
 - To install a module using pip: e.g. to install ipython
+  
     ```sh
     cd <espnet-root>/tools
     bash -c ". activate_python.sh; pip install ipython"
     ```
+
   In addition to the python libraries, you can also install several non-python libraries in the conda
   environment, e.g.,
+
     ```sh
     cd <espnet-root>/tools
     bash -c ". activate_python.sh; conda install -c anaconda cmake"
     ```
 
-### Check installation
+## Check installation
 You can check whether your installation is successfully finished by
+
 ```sh
 cd <espnet-root>/tools
 bash -c ". ./activate_python.sh; . ./extra_path.sh; python3 check_install.py"

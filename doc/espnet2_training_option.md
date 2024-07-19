@@ -1,4 +1,5 @@
 # Change the configuration for training
+
 ## Show usage
 There are two ways to show the command line options: `--help` and `--print_config`
 
@@ -181,14 +182,17 @@ About Weights & Biases: https://docs.wandb.com/
     ```sh
     wandb login
     ```
-1. Enable wandb
+
+2. Enable wandb
 
     ```sh
     python -m espnet2.bin.asr_train --use_wandb true
     ```
 
     and go to the shown URL.
-1. [Option] To use HTTPS PROXY
+
+3. [Option] To use HTTPS PROXY
+   
     ```sh
     export HTTPS_PROXY=...your proxy
     export CURL_CA_BUNDLE=your.pem
@@ -224,14 +228,17 @@ python -m espnet2.bin.asr_train --valid_batch_size 200
 The behavior for batch-size during multi-GPU training is **different from that of ESPNet1**.
 
 - ESPNet1: The batch-size will be multiplied by the number of GPUs.
+  
   ```bash
   python -m espnet.bin.asr_train --batch_size 10 --ngpu 2 # Actual batch_size is 20 and each GPU devices are assigned to 10
   ```
+  
 - ESPnet2: The batch-size is not changed regardless of the number of GPUs.
   - Therefore, you should set a more number of batch-size than that of GPUs.
-  ```bash
-  python -m espnet.bin.asr_train --batch_size 10 --ngpu 2 # Actual batch_size is 10 and each GPU devices are assigned to 5
-  ```
+  
+    ```bash
+    python -m espnet.bin.asr_train --batch_size 10 --ngpu 2 # Actual batch_size is 10 and each GPU devices are assigned to 5
+    ```
 
 ## Change mini-batch type
 We adopt variable mini-batch size with considering the dimension of the input features
@@ -239,14 +246,14 @@ to make the best use of the GPU memory.
 
 There are 6 types:
 
-|batch_type|Option to change batch-size|Variable batch-size|Requirement|
-|---|---|---|---|
-|unsorted|--batch_size|No|-|
-|sorted|--batch_size|No|Length information of features|
-|folded|--batch_size|Yes|Length information of features|
-|length|--batch_bins|Yes|Length information of features|
-|numel|--batch_bins|Yes|Shape information of features|
-|catbel|--batch_size|No|-|
+| batch_type | Option to change batch-size | Variable batch-size | Requirement                    |
+| ---------- | --------------------------- | ------------------- | ------------------------------ |
+| unsorted   | --batch_size                | No                  | -                              |
+| sorted     | --batch_size                | No                  | Length information of features |
+| folded     | --batch_size                | Yes                 | Length information of features |
+| length     | --batch_bins                | Yes                 | Length information of features |
+| numel      | --batch_bins                | Yes                 | Shape information of features  |
+| catbel     | --batch_size                | No                  | -                              |
 
 Note that **--batch_size is ignored if --batch_type=length or --batch_type=numel**.
 

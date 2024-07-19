@@ -83,12 +83,12 @@ but **`wav.scp` of ESPnet2 can handle all audio formats supported by soundfile**
 
 Depending on the situation, you may choose one of the following codecs:
 
-|  Codec  |  Compression | Maximum channnels | Maximum sampling frequency|Note|
-| ---- | ---- | ---- | ---- | ---- |
-|  wav (Microsoft wav with linear pcm) | No |  1024  | - | |
-|  flac  |  Lossless  | 8 | 192khz ||
-| mp3 | Lossy | 2 | 48khz | The patent of MP3 has expired |
-| ogg (Vorbis) | Lossy | 255 | 192khz | Segmentation fault happens |
+| Codec                               | Compression | Maximum channnels | Maximum sampling frequency | Note                          |
+| ----------------------------------- | ----------- | ----------------- | -------------------------- | ----------------------------- |
+| wav (Microsoft wav with linear pcm) | No          | 1024              | -                          |                               |
+| flac                                | Lossless    | 8                 | 192khz                     |                               |
+| mp3                                 | Lossy       | 2                 | 48khz                      | The patent of MP3 has expired |
+| ogg (Vorbis)                        | Lossy       | 255               | 192khz                     | Segmentation fault happens    |
 
 
 By default, we select `flac` because `flac` can convert linear pcm files with compression rate of ~55 % without data loss.

@@ -1,4 +1,5 @@
 # Task class and data input system for training
+
 ## Task class
 
 In ESpnet1, we have too many duplicated python modules.
@@ -112,26 +113,35 @@ e.g. file path, transcription, a sequence of numbers.
 
 
 - format=npy
+  
     ```
     sample_id_a /some/path/a.npy
     sample_id_b /some/path/b.npy
     ```
+
 - format=sound
+  
     ```
     sample_id_a /some/path/a.flac
     sample_id_b /some/path/a.wav
     ```
+
 - format=kaldi_ark
+  
     ```
     sample_id_a /some/path/a.ark:1234
     sample_id_b /some/path/a.ark:5678
     ```
+
 - format=text_int
+  
     ```
     sample_id_a 10 2 4 4
     sample_id_b 3 2 0 1 6 2
     ```
+
 - format=text
+  
     ```
     sample_id_a hello world
     sample_id_b It is rainy today
@@ -139,6 +149,7 @@ e.g. file path, transcription, a sequence of numbers.
 
 
 ### `required_data_names()` and `optional_data_names()`
+
 Though an arbitrary dictionary can be created by this system,
 each task assumes that the specific key is given for a specific purpose.
 e.g. ASR Task requires `speech` and `text` keys and
@@ -188,6 +199,7 @@ python -m new_task \
 
 
 ## Customize `collcate_fn` for PyTorch data loader
+
 `Task` class has a method to customize `collcate_fn`:
 
 ```python
@@ -245,6 +257,7 @@ This collate_fn is aware of variable sequence features for seq2seq task:
 - The first axis of the sequence tensor from dataset must be length axis: e.g. (Length, Dim), (Length, Dim, Dim2), or (Length, ...)
 - It's not necessary to make the lengths of each sample unified and they are stacked with zero-padding.
     - The value of padding can be changed.
+  
         ```python
         from espnet2.train.collate_fn import CommonCollateFn
         @classmethod
@@ -252,14 +265,19 @@ This collate_fn is aware of variable sequence features for seq2seq task:
             # float_pad_value is used for float-tensor and int_pad_value is used for int-tensor
             return CommonCollateFn(float_pad_value=0.0, int_pad_value=-1)
         ```
+
 - Tensors which represent the length of each samples are also appended
+  
     ```python
     batch = {"speech": ..., "speech_lengths": ..., "text": ..., "text_lengths": ...}
     ```
+
 - If the feature is not sequential data, this behavior can be disabled.
+  
     ```bash
     python -m new_task --train_data_path_and_name_and_type=filepath,foo,npy
     ```
+    
     ```python
     @classmethod
     def build_collate_fn(cls, args):

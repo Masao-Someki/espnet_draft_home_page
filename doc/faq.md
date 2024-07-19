@@ -1,4 +1,5 @@
 # FAQ
+
 ## How to build espnet on a cloud machine such as GCP, AWS, etc.?
 
 Our documentation, [Installation](./installation.md), assumes that some basic tools are already installed in your machine, gcc, make, etc.,
@@ -25,11 +26,14 @@ cd tools
 ### To detect the installation problem with a normal installation
 
 1. Check where your python is
+   
     ```bash
     $ . tools/activate_python.sh
     $ which python  # Normally, it should point to <espnet-root>/tools/venv
     ```
-1. Check the installation of espnet
+
+2. Check the installation of espnet
+   
     ```bash
     $ python
     >>> import espnet
