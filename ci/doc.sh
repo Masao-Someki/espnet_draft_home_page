@@ -104,7 +104,7 @@ else
 fi
 
 npm i
-npm run docs:dev
-# npm run docs:build
+# npm run docs:dev
+npm run docs:build
 
-# mv .vuepress/dist ../
+mv src/.vuepress/dist ../../
