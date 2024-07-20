@@ -5,15 +5,11 @@
 build_and_convert () {
     # $1: path
     # $2: output
-    mkdir -p ./doc/_gen/$2
-    echo "# $2
-
-" > ./doc/_gen/$2.md
+    mkdir -p ./doc/_gen/tools/$2
     for filename in `find $1`; do
         bn=`basename ${filename}`
         echo "Converting ${filename} to rst..."
         ./doc/usage2rst.sh ${filename} > ./doc/_gen/tools/$2/${bn}.rst
-        echo "- [${bn}](./tools/$2/${bn}.md)" >> ./doc/_gen/$2.md
     done
 }
 
@@ -24,61 +20,76 @@ fi
 # build sphinx document under doc/
 mkdir -p doc/_gen
 mkdir -p doc/_gen/tools
+mkdir -p doc/_gen/guide
 
 # NOTE allow unbound variable (-u) inside kaldi scripts
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH-}
-# set -euo pipefail
+# set -e pipefail
 
 # generate tools doc
+mkdir utils_py
 ./doc/argparse2rst.py \
     --title utils_py \
     --output_dir utils_py \
-    ./utils/*.py > ./doc/_gen/utils_py.rst
+    ./utils/*.py 
 mv utils_py ./doc/_gen/tools
 
+mkdir espnet_bin
 ./doc/argparse2rst.py \
     --title espnet_bin \
     --output_dir espnet_bin \
-    ./espnet/bin/*.py > ./doc/_gen/espnet_bin.rst
+    ./espnet/bin/*.py 
 mv espnet_bin ./doc/_gen/tools
 
+mkdir espnet2_bin
 ./doc/argparse2rst.py \
     --title espnet2_bin \
     --output_dir espnet2_bin \
-    ./espnet2/bin/*.py > ./doc/_gen/espnet2_bin.rst
+    ./espnet2/bin/*.py 
 mv espnet2_bin ./doc/_gen/tools
 
-build_and_convert "utils/*.sh" utils_sh
+build_and_convert "utils/*.sh" utils
 build_and_convert "tools/sentencepiece_commands/spm_*" spm
 
-./doc/notebook2rst.sh > ./doc/_gen/notebooks.md
+./doc/notebook2rst.sh > ./doc/notebooks.md
 
 # generate package doc
-./doc/members2rst.py --root espnet --dst ./doc/_gen/packages --exclude espnet.bin
-./doc/members2rst.py --root espnet2 --dst ./doc/_gen/packages --exclude espnet2.bin
-./doc/members2rst.py --root espnetez --dst ./doc/_gen/packages
+python ./doc/members2rst.py --root espnet --dst ./doc/_gen/guide --exclude espnet.bin
+python ./doc/members2rst.py --root espnet2 --dst ./doc/_gen/guide --exclude espnet2.bin
+python ./doc/members2rst.py --root espnetez --dst ./doc/_gen/guide
 
 
-# build html
-# TODO(karita): add -W to turn warnings into errors
+# build markdown
 cp ./doc/index.rst ./doc/_gen/index.rst
 cp ./doc/conf.py ./doc/_gen/
-rm ./doc/_gen/tools/espnet2_bin/*_train.rst
+rm -f ./doc/_gen/tools/espnet2_bin/*_train.rst
 sphinx-build -M markdown ./doc/_gen ./doc/build
 
-cp -r ./doc/build/markdown/* ./doc/vuepress/docs/
-cp -r ./doc/notebook ./doc/vuepress/docs/
-cp ./doc/*.md ./doc/vuepress/docs/
-cp -r ./doc/image ./doc/vuepress/docs/
+# copy markdown files to specific directory.
+cp -r ./doc/build/markdown/* ./doc/vuepress/src/
+cp -r ./doc/notebook ./doc/vuepress/src/
+cp ./doc/*.md ./doc/vuepress/src/
+mv ./doc/vuepress/src/README.md ./doc/vuepress/src/document.md
+cp -r ./doc/image ./doc/vuepress/src/
 
-find ./doc/vuepress/docs/ -name "*.md" -exec sed -i 's/^> - \[/- \[/g' {} \;
-find ./doc/vuepress/docs/ -name "*.md" -exec sed -i 's/```default/```text/g' {} \;
-find ./doc/vuepress/docs/ -name "*.md" -exec sed -i 's/```pycon/```python/g' {} \;
-./doc/convert_custom_tags_to_html.py ./doc/vuepress/docs/
+# Document generation has finished.
+# From the following point we modify files for VuePress.
+# Replace language tags to supported language tags
+find ./doc/vuepress/src/ -name "*.md" -exec sed -i 's/```default/```text/g' {} \;
+find ./doc/vuepress/src/ -name "*.md" -exec sed -i 's/```pycon/```python/g' {} \;
+find ./doc/vuepress/src/ -name "*.md" -exec sed -i 's/```cd/```text/g' {} \;
 
-python ./doc/vuepress/create_menu.py \
-    --root ./doc/vuepress/docs \
-    --dlist tools packages notebook
+# And convert custom tags to &lt; and &gt;, as <custom tag> can be recognized a html tag.
+python ./doc/convert_custom_tags_to_html.py ./doc/vuepress/src/
+
+# Convert API document to specific html tags to display sphinx style
+python ./doc/convert_md_to_homepage.py ./doc/vuepress/src/guide/
+python ./doc/convert_md_to_homepage.py ./doc/vuepress/src/tools/
+
+# Create navbar and sidebar.
+cd ./doc/vuepress
+python create_menu.py \
+    --root ./src
 
 # check if node is installed
 if which node > /dev/null
@@ -92,8 +103,8 @@ else
     apt autoremove -y
 fi
 
-cd ./doc/vuepress
 npm i
-npm run docs:build
+npm run docs:dev
+# npm run docs:build
 
-mv .vuepress/dist ../
+# mv .vuepress/dist ../
