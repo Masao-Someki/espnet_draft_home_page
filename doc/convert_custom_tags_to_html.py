@@ -1,9 +1,6 @@
-#!/usr/bin/env python3
 import os
 import glob
 import re
-import tqdm
-
 import configargparse
 
 ALL_HTML_TAGS = [
@@ -153,6 +150,12 @@ def replace_special_chars(content):
     tag_pattern = re.compile(r'<(?!\/)(.+?)(?!\/)>')
     def replace_tag(match):
         tag_name = match.group(1)
+        if len(tag_name) > 50:
+            # heuristics to ignore tags with too long names
+            # This might occur with image tags, since they have image data
+            # in base64 format.
+            return match.group(0)
+
         if (
             tag_name.split()[0] not in ALL_HTML_TAGS
             or (
@@ -174,6 +177,11 @@ def replace_string_tags(content):
     tag_pattern = re.compile(r"['|\"]<(?!\/)(.+?)(?!\/)>['|\"]")
     def replace_tag(match):
         tag_name = match.group(1)
+        if len(tag_name) > 50:
+            # heuristics to ignore tags with too long names
+            # This might occur with image tags, since they have image data
+            # in base64 format.
+            return match.group(0)
         if (
             tag_name.split()[0] not in ALL_HTML_TAGS
             or (
@@ -193,7 +201,7 @@ def replace_string_tags(content):
 # parser
 args = get_parser().parse_args()
 
-for md in tqdm.tqdm(glob.glob(f"{args.root}/*.md", recursive=True)):
+for md in glob.glob(f"{args.root}/*.md", recursive=True):
     with open(md, "r") as f:
         content = f.read()
 
@@ -206,7 +214,7 @@ for md in tqdm.tqdm(glob.glob(f"{args.root}/*.md", recursive=True)):
         f.write(content)
 
 
-for md in tqdm.tqdm(glob.glob(f"{args.root}/**/*.md", recursive=True)):
+for md in glob.glob(f"{args.root}/**/*.md", recursive=True):
     with open(md, "r") as f:
         content = f.read()
 

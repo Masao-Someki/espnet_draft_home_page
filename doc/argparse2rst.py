@@ -60,7 +60,9 @@ for p in args.src:
     except Exception as e:
         logging.error(f"Error processing {p}: {str(e)}")
 
-print(f"""# {args.title}
+print(f"""
+{args.title}
+{"=" * len(args.title)}
 
 """)
 
@@ -69,7 +71,7 @@ for m in modinfo:
     d = m.module.get_parser().description
     assert d is not None
     cmd = m.path.name
-    print(f"- [{cmd[:-3]}](./tools/{args.output_dir}/{cmd[:-3]}.md)")
+    print(f".. _{cmd}:")
 
 print()
 
@@ -79,20 +81,17 @@ os.makedirs(args.output_dir, exist_ok=True)
 for m in modinfo:
     cmd = m.path.name
     sep = "=" * len(cmd)
+    sep2 = "~" * len(cmd)
     with open(f"{args.output_dir}/{cmd[:-3]}.rst", "w") as writer: # remove .py
         writer.write(
-        f"""
-
-.. _{cmd}:
-
+        f""".. _{cmd}
 {cmd}
-{sep}
+{sep2}
 
 .. argparse::
    :module: {m.name}
    :func: get_parser
    :prog: {cmd}
 
-"""
-    )
+""")
 

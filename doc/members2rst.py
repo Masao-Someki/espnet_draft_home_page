@@ -32,26 +32,24 @@ def parse_ast(filename):
 
 
 def gen_func_rst(func_name, writer):
-    writer.write(f"""
+    writer.write(f""".. _{func_name}
 {func_name}
-{"=" * len(func_name)}
+{"~" * len(func_name)}
 
 .. autofunction:: {func_name}
 """)
 
 
 def gen_class_rst(class_name, writer):
-    writer.write(f"""
+    writer.write(f""".. _{class_name}
 {class_name}
-{"=" * len(class_name)}
+{"~" * len(class_name)}
 
 .. autoclass:: {class_name}
     :members:
     :undoc-members:
     :show-inheritance:
 """)
-
-
 
 # parser
 parser = configargparse.ArgumentParser(
@@ -70,39 +68,34 @@ print(args)
 
 gendir = args.dst
 os.makedirs(gendir, exist_ok=True)
+os.makedirs(f"{gendir}/{args.root}", exist_ok=True)
 
-with open(gendir + f"/{args.root}_package.md", "w") as f_module:
-    f_module.write(f"""# {args.root} Package
+for p in glob(args.root + "/**", recursive=True):
+    module_name = to_module(p)
+    if any([ex in module_name for ex in args.exclude]):
+        continue
+    if "__init__" in p:
+        continue
+    if not p.endswith(".py"):
+        continue
+    
+    submodule_name = module_name.split(".")[1]
+    os.makedirs(f"{gendir}/{args.root}/{submodule_name}", exist_ok=True)
 
-Documents for {args.root} package.
-
-""")
-    os.makedirs(f"{gendir}/{args.root}", exist_ok=True)
-    for p in glob(args.root + "/**", recursive=True):
-        if p in args.exclude:
-            continue
-        if "__init__" in p:
-            continue
-        if not p.endswith(".py"):
-            continue
-        
-        module_name = to_module(p)
-
+    if not os.path.exists(f"{gendir}/{args.root}/{submodule_name}/README.rst"):
         # 1 get functions
         for func in top_level_functions(parse_ast(p).body):
             function_name = func.name
-            f_module.write(f" - [{module_name}.{function_name}](./{args.root}/{module_name}.{function_name}.md)\n")
             print(f"[INFO] generating {func.name} in {module_name}")
             # 1.2 generate RST
-            with open(f"{gendir}/{args.root}/{module_name}.{function_name}.rst", "w") as f_rst:
+            with open(f"{gendir}/{args.root}/{submodule_name}/{function_name}.rst", "w") as f_rst:
                 gen_func_rst(f"{module_name}.{function_name}", f_rst)
         
         # 2 get classes
         for clz in top_level_classes(parse_ast(p).body):
             class_name = clz.name
-            f_module.write(f" - [{module_name}.{class_name}](./{args.root}/{module_name}.{class_name}.md)\n")
             print(f"[INFO] generating {clz.name} in {module_name}")
             # 1.2 generate RST
-            with open(f"{gendir}/{args.root}/{module_name}.{class_name}.rst", "w") as f_rst:
+            with open(f"{gendir}/{args.root}/{submodule_name}/{class_name}.rst", "w") as f_rst:
                 gen_class_rst(f"{module_name}.{class_name}", f_rst)
 
