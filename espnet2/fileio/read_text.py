@@ -13,12 +13,17 @@ def read_2columns_text(path: Union[Path, str]) -> Dict[str, str]:
     """Read a text file having 2 columns as dict object.
 
     Examples:
-        wav.scp:
-            key1 /some/path/a.wav
-            key2 /some/path/b.wav
+    
+        wav.scp
+        ```
+        key1 /some/path/a.wav
+        key2 /some/path/b.wav
+        ```
 
+        ```python
         >>> read_2columns_text('wav.scp')
-        {'key1': '/some/path/a.wav', 'key2': '/some/path/b.wav'}
+        {'key1': -'/some/path/a.wav', 'key2': '/some/path/b.wav'}
+        ```
 
     """
 
