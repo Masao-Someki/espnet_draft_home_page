@@ -30,7 +30,7 @@
     </script>
     <link rel="icon" href="/espnet_draft_home_page/assets/image/espnet.png"><title>ESPnet3 Inference Configuration</title><meta name="description" content="A documentation for ESPnet">
     <link rel="preload" href="/espnet_draft_home_page/assets/style-CiXYLHjk.css" as="style"><link rel="stylesheet" href="/espnet_draft_home_page/assets/style-CiXYLHjk.css">
-    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-CNfbpwQW.js">
+    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-B5mne5_3.js">
     
   </head>
   <body>
@@ -81,6 +81,6 @@
 <span class="line"><span>    hyp1.scp</span></span>
 <span class="line"><span>  test-other/</span></span>
 <span class="line"><span>    hyp.scp</span></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>The exact filenames are determined by:</p><ul><li><code>output_keys</code> (if set), or</li><li>the keys returned by <code>output_fn</code> (excluding <code>idx_key</code>) for the first sample.</li></ul><h2 id="batched-execution-batch-size" tabindex="-1"><a class="header-anchor" href="#batched-execution-batch-size"><span>Batched execution (<code>batch_size</code>)</span></a></h2><p>If <code>batch_size</code> is set, <code>InferenceRunner.forward</code> receives a list of indices and passes list-valued inputs to the model (one list per <code>input_key</code>). There is no <code>batch_forward</code>; batching is handled entirely through <code>forward</code>.</p><p>In that case, <code>output_fn</code> is called with:</p><ul><li><code>data</code>: a list of dataset items</li><li><code>idx</code>: a list of indices</li><li><code>model_output</code>: your model&#39;s batched output structure</li></ul><p>If you don&#39;t want to handle batched <code>output_fn</code>, leave <code>batch_size</code> unset. When <code>batch_size</code> is unset, <code>forward</code> is called with a scalar index and <code>data</code> is a single dataset item.</p><h2 id="parallel-execution" tabindex="-1"><a class="header-anchor" href="#parallel-execution"><span>Parallel execution</span></a></h2><p>Parallel execution is documented separately:</p><ul><li><a class="route-link" href="/espnet_draft_home_page/espnet3/core/parallel/provider_runner.html">Provider / Runner</a></li><li><a class="route-link" href="/espnet_draft_home_page/espnet3/core/parallel/multiple_gpu.html">Multi-GPU / multi-node</a></li></ul></div><!----><footer class="vp-page-meta"><!----><div class="vp-meta-item git-info"><!----><!----></div></footer><!----><!----><!----><!--]--></main><!--]--><footer class="vp-footer-wrapper"><div class="vp-footer">Copyright © 2024 ESPnet Community. All rights reserved.</div><div class="vp-copyright">Copyright © 2026 Masao Someki </div></footer></div><!--]--><!--]--><!--[--><!----><!----><!--]--><!--]--></div>
-    <script type="module" src="/espnet_draft_home_page/assets/app-CNfbpwQW.js" defer></script>
+    <script type="module" src="/espnet_draft_home_page/assets/app-B5mne5_3.js" defer></script>
   </body>
 </html>
