@@ -30,7 +30,7 @@
     </script>
     <link rel="icon" href="/espnet_draft_home_page/assets/image/espnet.png"><title>Demo Runtime</title><meta name="description" content="A documentation for ESPnet">
     <link rel="preload" href="/espnet_draft_home_page/assets/style-CiXYLHjk.css" as="style"><link rel="stylesheet" href="/espnet_draft_home_page/assets/style-CiXYLHjk.css">
-    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-D7KGJ4Mg.js">
+    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-C58nO8LS.js">
     
   </head>
   <body>
@@ -45,6 +45,6 @@
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        if</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;"> idx </span><span style="--shiki-light:#D73A49;--shiki-dark:#56B6C2;">!=</span><span style="--shiki-light:#005CC5;--shiki-dark:#D19A66;"> 0</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">:</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">            raise</span><span style="--shiki-light:#005CC5;--shiki-dark:#ABB2BF;"> IndexError</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">(idx)</span></span>
 <span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#C678DD;">        return</span><span style="--shiki-light:#005CC5;--shiki-dark:#E5C07B;"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#ABB2BF;">._item</span></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>What this means:</p><ul><li>UI inputs are packaged into a single dict like <code>{&quot;speech&quot;: ..., &quot;lang&quot;: ...}</code>.</li><li><code>dataset[0]</code> returns that dict; any other index errors.</li><li>Your runner should read the UI values from <code>dataset[idx]</code> (with <code>idx=0</code>). So your runner can treat <code>dataset[0][&quot;speech&quot;]</code> (or similar) as a plain waveform array.</li></ul></div><!----><footer class="vp-page-meta"><!----><div class="vp-meta-item git-info"><!----><!----></div></footer><!----><!----><!----><!--]--></main><!--]--><footer class="vp-footer-wrapper"><div class="vp-footer">Copyright © 2024 ESPnet Community. All rights reserved.</div><div class="vp-copyright">Copyright © 2026 Masao Someki </div></footer></div><!--]--><!--]--><!--[--><!----><!----><!--]--><!--]--></div>
-    <script type="module" src="/espnet_draft_home_page/assets/app-D7KGJ4Mg.js" defer></script>
+    <script type="module" src="/espnet_draft_home_page/assets/app-C58nO8LS.js" defer></script>
   </body>
 </html>
