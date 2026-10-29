@@ -30,7 +30,7 @@
     </script>
     <link rel="icon" href="/espnet_draft_home_page/assets/image/espnet.png"><title>ESPnet3 Experiment Naming Examples</title><meta name="description" content="A documentation for ESPnet">
     <link rel="preload" href="/espnet_draft_home_page/assets/style-DAvwh2q_.css" as="style"><link rel="stylesheet" href="/espnet_draft_home_page/assets/style-DAvwh2q_.css">
-    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-BP3d0KOb.js">
+    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-DR9XfZh5.js">
     
   </head>
   <body>
@@ -42,6 +42,6 @@
 <span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E06C75;">exp_tag</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379;">whisper_eval</span></span>
 <span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E06C75;">exp_dir</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379;">${recipe_dir}/exp/${exp_tag}</span></span>
 <span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E06C75;">inference_dir</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379;">${exp_dir}/${self_name:}</span></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>It must also supply a compatible model/backend and dataset. A blank <code>exp_tag</code> is not a usable experiment name. Do not assume supplying a later role config creates or loads a trained model automatically.</p><h2 id="supported-cli-overrides" tabindex="-1"><a class="header-anchor" href="#supported-cli-overrides"><span>Supported CLI overrides</span></a></h2><p><code>--exp_dir</code> and stage-directory flags derived from <code>StageSpec.log_dir</code> are supported. Each role flag takes one path. Arbitrary Hydra <code>key=value</code> CLI overrides and the removed <code>--config</code>/numbered-stage interface are not supported.</p><p>The baseline launcher keeps only requested stage config entries. To run ASR training through the CLI, request <code>train_tokenizer</code> alongside <code>train</code>; to score dataset-backed references, request <code>infer</code> alongside <code>measure</code>. Direct system construction can build predecessor configs without executing those methods.</p></div><!----><!----><!----></div><footer class="vp-page-meta"><!----><div class="vp-meta-item git-info"><!----><!----></div></footer><!----><!----><!----><!--]--></main><!--]--><footer class="vp-footer-wrapper" vp-footer><div class="vp-footer">Copyright © 2024 ESPnet Community. All rights reserved.</div><!----></footer></div><!--]--><!--]--><!--[--><!----><!----><!--[--><!--]--><!--]--><!--]--></div>
-    <script type="module" src="/espnet_draft_home_page/assets/app-BP3d0KOb.js" defer></script>
+    <script type="module" src="/espnet_draft_home_page/assets/app-DR9XfZh5.js" defer></script>
   </body>
 </html>
