@@ -30,7 +30,7 @@
     </script>
     <link rel="icon" href="/espnet_draft_home_page/assets/image/espnet.png"><title>ESPnet3 Contracts</title><meta name="description" content="A documentation for ESPnet">
     <link rel="preload" href="/espnet_draft_home_page/assets/style-DAvwh2q_.css" as="style"><link rel="stylesheet" href="/espnet_draft_home_page/assets/style-DAvwh2q_.css">
-    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-DR9XfZh5.js">
+    <link rel="modulepreload" href="/espnet_draft_home_page/assets/app-BphgFeCs.js">
     
   </head>
   <body>
@@ -140,6 +140,6 @@
 <span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E06C75;">    inputs</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF;">:</span></span>
 <span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E06C75;">      ref</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379;">dataset:text</span></span>
 <span class="line"><span style="--shiki-light:#E45649;--shiki-dark:#E06C75;">      hyp</span><span style="--shiki-light:#383A42;--shiki-dark:#ABB2BF;">: </span><span style="--shiki-light:#50A14F;--shiki-dark:#98C379;">text</span></span></code></pre><div class="line-numbers" aria-hidden="true" style="counter-reset:line-number 0;"><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div><div class="line-number"></div></div></div><p>This reads the model&#39;s <code>text.scp</code> and the test dataset&#39;s <code>text</code> column. <code>inputs</code> does not belong at the config root or inside <code>metric:</code> constructor kwargs. Results are written to <code>${inference_dir}/metrics.json</code>.</p><h2 id="stage-contracts" tabindex="-1"><a class="header-anchor" href="#stage-contracts"><span>Stage contracts</span></a></h2><p>Systems declare an ordered tuple of <code>StageSpec(name=..., config=..., log_dir=...)</code>. <code>config</code> names one role or a tuple of roles; it is not a file path. Add custom stages by constructing a full tuple with inherited stages plus your additions, and define the corresponding method. No automatic stage-name-only insertion API is provided. See the <a class="route-link" href="/espnet_draft_home_page/espnet3/config/">configuration/launch reference</a> for roles and the reviewed launcher&#39;s predecessor-entry limitations.</p></div><!----><!----><!----></div><footer class="vp-page-meta"><!----><div class="vp-meta-item git-info"><!----><!----></div></footer><!----><!----><!----><!--]--></main><!--]--><footer class="vp-footer-wrapper" vp-footer><div class="vp-footer">Copyright © 2024 ESPnet Community. All rights reserved.</div><!----></footer></div><!--]--><!--]--><!--[--><!----><!----><!--[--><!--]--><!--]--><!--]--></div>
-    <script type="module" src="/espnet_draft_home_page/assets/app-DR9XfZh5.js" defer></script>
+    <script type="module" src="/espnet_draft_home_page/assets/app-BphgFeCs.js" defer></script>
   </body>
 </html>
